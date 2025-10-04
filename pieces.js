@@ -24,7 +24,7 @@ const pieces = {
     [0, 0, 0, 1],
     [0, 0, 0, 0],
   ],
-  z: [
+  Z: [
     [0, 0, 0, 0],
     [0, 1, 1, 0],
     [0, 0, 1, 1],
@@ -54,4 +54,24 @@ function rotatePiece(p) {
     }
   }
   return res;
+}
+
+function randomPiece() {
+  let rand = Math.floor(Math.random() * 7);
+  switch (rand) {
+    case 0:
+      return pieces.I;
+    case 1:
+      return pieces.J;
+    case 2:
+      return pieces.L;
+    case 3:
+      return pieces.O;
+    case 4:
+      return pieces.S;
+    case 5:
+      return pieces.T;
+    case 6:
+      return pieces.Z;
+  }
 }
