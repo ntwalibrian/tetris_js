@@ -83,7 +83,17 @@ let posY = -1;
 drawPiece(currentPiece, posX, posY);
 
 function update() {
-  posY++;
+  // Check if the next move down causes a collision
+  if (!collision(currentPiece, posX, posY)) {
+    posY++; // move down
+  } else {
+    // Merge piece into board and spawn new one
+    mergePiece(currentPiece, posX, posY);
+    currentPiece = randomPiece();
+    posX = 3;
+    posY = -1;
+  }
+
   drawBoard();
   drawPiece(currentPiece, posX, posY);
 }
@@ -97,4 +107,80 @@ function gameLoop() {
   }, 1000);
 }
 
+function collision(piece, offsetX, offsetY) {
+  for (let y = 0; y < piece.length; y++) {
+    for (let x = 0; x < piece[y].length; x++) {
+      if (piece[y][x] !== 0) {
+        const newY = y + offsetY + 1;
+        const newX = x + offsetX;
+
+        // Check bottom of board
+        if (newY >= ROWS) {
+          return true;
+        }
+        // Check collision with existing blocks
+        if (board[newY][newX] !== 0) {
+          return true;
+        }
+      }
+    }
+  }
+  return false;
+}
+
+function collisionX(piece, offsetX, offsetY, dir) {
+  for (let y = 0; y < piece.length; y++) {
+    for (let x = 0; x < piece[y].length; x++) {
+      if (piece[y][x] !== 0) {
+        const newY = y + offsetY + 1;
+        const newX = x + offsetX + 1;
+        const nX = x + offsetX - 1;
+        //right
+        if (newX >= COLS && dir === "right") {
+          return true;
+        }
+
+        //left
+        if (nX <= -1 && dir === "left") {
+          return true;
+        }
+      }
+    }
+  }
+
+  return false;
+}
+function mergePiece(piece, offsetX, offsetY) {
+  for (let y = 0; y < piece.length; y++) {
+    for (let x = 0; x < piece[y].length; x++) {
+      if (piece[y][x] !== 0) {
+        board[y + offsetY][x + offsetX] = piece[y][x];
+      }
+    }
+  }
+}
+
+//move left
+document.addEventListener("keydown", function (event) {
+  switch (event.key) {
+    case "ArrowUp":
+      break;
+    case "ArrowDown":
+      break;
+    case "ArrowRight":
+      if (!collisionX(currentPiece, posX, posY, "right")) {
+        posX++;
+        drawBoard();
+        drawPiece(currentPiece, posX, posY);
+      }
+      break;
+    case "ArrowLeft":
+      if (!collisionX(currentPiece, posX, posY, "left")) {
+        posX--;
+        drawBoard();
+        drawPiece(currentPiece, posX, posY);
+      }
+      break;
+  }
+});
 gameLoop();
