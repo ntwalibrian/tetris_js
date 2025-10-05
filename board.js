@@ -135,10 +135,13 @@ function collisionX(piece, offsetX, offsetY, dir) {
         const newY = y + offsetY + 1;
         const newX = x + offsetX + 1;
         const nX = x + offsetX - 1;
+        const nY = y + offsetY - 1;
         //right
         if (newX >= COLS && dir === "right") {
           return true;
         }
+
+        // Check collision with existing blocks
 
         //left
         if (nX <= -1 && dir === "left") {
@@ -164,6 +167,11 @@ function mergePiece(piece, offsetX, offsetY) {
 document.addEventListener("keydown", function (event) {
   switch (event.key) {
     case "ArrowUp":
+      c = rotatePiece(currentPiece);
+      currentPiece = c;
+      drawBoard();
+      drawPiece(currentPiece, posX, posY);
+
       break;
     case "ArrowDown":
       break;
@@ -184,3 +192,5 @@ document.addEventListener("keydown", function (event) {
   }
 });
 gameLoop();
+
+//when moving left and right it doesn't check fo obsticles
