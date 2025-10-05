@@ -84,6 +84,7 @@ drawPiece(currentPiece, posX, posY);
 
 function update() {
   posY++;
+  drawBoard();
   drawPiece(currentPiece, posX, posY);
 }
 
