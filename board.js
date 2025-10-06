@@ -1,6 +1,6 @@
 const ROWS = 20;
 const COLS = 10;
-const BLOCK_SIZE = 30;
+const BLOCK_SIZE = 30; //pixels
 
 function createBoard() {
   return Array.from({ length: ROWS }, () => Array(COLS).fill(0));
@@ -38,19 +38,6 @@ function drawBoard() {
   }
 }
 
-function drawPieceOnBoard() {
-  const current = randomPiece();
-  let posY = -1;
-  let posX = 3;
-  for (let y = 0; y < current.length; y++) {
-    for (let x = 0; x < current[y].length; x++) {
-      if (current[y][x] != 0) {
-        board[y + posY][x + posX] = current[y][x];
-      }
-    }
-  }
-}
-
 function drawPiece(current, offsetX, offsetY) {
   for (let y = 0; y < current.length; y++) {
     for (let x = 0; x < current[y].length; x++) {
@@ -62,7 +49,6 @@ function drawPiece(current, offsetX, offsetY) {
           BLOCK_SIZE,
           BLOCK_SIZE
         );
-
         ctx.strokeStyle = "#f7f1f1";
         ctx.strokeRect(
           (x + offsetX) * BLOCK_SIZE,
@@ -74,8 +60,6 @@ function drawPiece(current, offsetX, offsetY) {
     }
   }
 }
-
-// drawPieceOnBoard()
 
 let currentPiece = randomPiece();
 let posX = 3;
@@ -93,7 +77,6 @@ function update() {
     posX = 3;
     posY = -1;
   }
-
   drawBoard();
   drawPiece(currentPiece, posX, posY);
 }
@@ -101,10 +84,9 @@ function update() {
 function gameLoop() {
   drawBoard();
   drawPiece(currentPiece, posX, posY);
-
   setInterval(() => {
     update();
-  }, 1000);
+  }, 500);
 }
 
 function collision(piece, offsetX, offsetY) {
@@ -113,7 +95,6 @@ function collision(piece, offsetX, offsetY) {
       if (piece[y][x] !== 0) {
         const newY = y + offsetY + 1;
         const newX = x + offsetX;
-
         // Check bottom of board
         if (newY >= ROWS) {
           return true;
@@ -140,9 +121,7 @@ function collisionX(piece, offsetX, offsetY, dir) {
         if (newX >= COLS && dir === "right") {
           return true;
         }
-
         // Check collision with existing blocks
-
         //left
         if (nX <= -1 && dir === "left") {
           return true;
@@ -150,9 +129,9 @@ function collisionX(piece, offsetX, offsetY, dir) {
       }
     }
   }
-
   return false;
 }
+
 function mergePiece(piece, offsetX, offsetY) {
   for (let y = 0; y < piece.length; y++) {
     for (let x = 0; x < piece[y].length; x++) {
@@ -162,7 +141,6 @@ function mergePiece(piece, offsetX, offsetY) {
     }
   }
 }
-
 //move left
 document.addEventListener("keydown", function (event) {
   switch (event.key) {
@@ -171,7 +149,6 @@ document.addEventListener("keydown", function (event) {
       currentPiece = c;
       drawBoard();
       drawPiece(currentPiece, posX, posY);
-
       break;
     case "ArrowDown":
       break;
@@ -192,5 +169,4 @@ document.addEventListener("keydown", function (event) {
   }
 });
 gameLoop();
-
 //when moving left and right it doesn't check fo obsticles
