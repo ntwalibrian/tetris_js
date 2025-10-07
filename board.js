@@ -95,6 +95,7 @@ function collision(piece, offsetX, offsetY) {
       if (piece[y][x] !== 0) {
         const newY = y + offsetY + 1;
         const newX = x + offsetX;
+
         // Check bottom of board
         if (newY >= ROWS) {
           return true;
@@ -110,20 +111,40 @@ function collision(piece, offsetX, offsetY) {
 }
 
 function collisionX(piece, offsetX, offsetY, dir) {
+  const dx = dir === "right" ? 1 : -1;
   for (let y = 0; y < piece.length; y++) {
     for (let x = 0; x < piece[y].length; x++) {
       if (piece[y][x] !== 0) {
-        const newY = y + offsetY + 1;
-        const newX = x + offsetX + 1;
-        const nX = x + offsetX - 1;
-        const nY = y + offsetY - 1;
-        //right
-        if (newX >= COLS && dir === "right") {
+        const newX = x + offsetX + dx;
+        const newY = y + offsetY;
+
+        if (newX <= -1 || newX >= COLS) {
           return true;
         }
+
+        if (newY >= 0 && board[newY][newX] !== 0) {
+          return true;
+        }
+      }
+    }
+  }
+  return false;
+}
+
+function collisionRotate(piece, offsetX, offsetY) {
+  for (let y = 0; y < piece.length; y++) {
+    for (let x = 0; x < piece[y].length; x++) {
+      if (piece[y][x] !== 0) {
+        const newX = x + offsetX;
+        const newY = y + offsetY;
+
+        // Check bounds
+        if (newX < 0 || newX >= COLS || newY >= ROWS) {
+          return true;
+        }
+
         // Check collision with existing blocks
-        //left
-        if (nX <= -1 && dir === "left") {
+        if (newY >= 0 && board[newY][newX] !== 0) {
           return true;
         }
       }
@@ -146,11 +167,19 @@ document.addEventListener("keydown", function (event) {
   switch (event.key) {
     case "ArrowUp":
       c = rotatePiece(currentPiece);
-      currentPiece = c;
-      drawBoard();
-      drawPiece(currentPiece, posX, posY);
+      if (!collisionRotate(c, posX, posY)) {
+        currentPiece = c;
+        drawBoard();
+        drawPiece(currentPiece, posX, posY);
+      }
+
       break;
     case "ArrowDown":
+      if (!collision(currentPiece, posX, posY)) {
+        posY++;
+        drawBoard();
+        drawPiece(currentPiece, posX, posY);
+      }
       break;
     case "ArrowRight":
       if (!collisionX(currentPiece, posX, posY, "right")) {
