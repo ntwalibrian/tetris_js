@@ -139,7 +139,7 @@ function collisionRotate(piece, offsetX, offsetY) {
         const newY = y + offsetY;
 
         // Check bounds
-        if (newX < 0 || newX >= COLS || newY >= ROWS) {
+        if (newX < -1 || newX >= COLS || newY >= ROWS) {
           return true;
         }
 
