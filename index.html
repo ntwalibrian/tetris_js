@@ -4,11 +4,27 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Tetris</title>
+    <style>
+      .container {
+        display: flex;
+        flex-direction: row;
+        align-items: flex-start;
+        gap: 10px;
+      }
+    </style>
   </head>
   <body>
-    <canvas id="tetris" width="200" height="400"></canvas>
+    <div class="container">
+      <canvas id="tetris"></canvas>
+      <canvas id="preview"></canvas>
+    </div>
+
+    <audio
+      src="./03 Girls Want Girls (feat. Lil Baby) - (SongsLover.com).mp3"
+    ></audio>
     <script src="./pieces.js"></script>
+
     <script src="./board.js"></script>
-    
+    <script src="./audio.js"></script>
   </body>
 </html>
