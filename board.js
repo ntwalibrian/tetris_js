@@ -16,6 +16,9 @@ const cty = canvaPreview.getContext("2d");
 const canvaLines = document.getElementById("lineCount");
 const ctz = canvaLines.getContext("2d");
 
+let gameOverFlag = false;
+let intervalId;
+
 // Set the canvas size to match the board
 canvas.width = COLS * BLOCK_SIZE;
 canvas.height = ROWS * BLOCK_SIZE;
@@ -122,6 +125,11 @@ function update() {
     preview = randomPiece();
     posX = 3;
     posY = 0;
+
+    if (checkLoss(currentPiece, posX, posY)) {
+      gameOver();
+      return;
+    }
   }
   drawBoard();
   previewBoard();
@@ -133,8 +141,8 @@ function gameLoop() {
   countBoard();
   previewBoard();
   drawPiece(currentPiece, posX, posY);
-  setInterval(() => {
-    update();
+  intervalId = setInterval(() => {
+    if (!gameOverFlag) update();
   }, 500);
 }
 
@@ -175,6 +183,21 @@ function collision(piece, offsetX, offsetY) {
   }
   return false;
 }
+
+function checkLoss(piece, offsetX, offsetY) {
+  for (let y = 0; y < piece.length; y++) {
+    for (let x = 0; x < piece[y].length; x++) {
+      if (piece[y][x] !== 0) {
+        // If the cell overlaps an existing block at spawn
+        if (board[y + offsetY][x + offsetX] !== 0) {
+          return true;
+        }
+      }
+    }
+  }
+  return false;
+}
+
 
 function collisionX(piece, offsetX, offsetY, dir) {
   const dx = dir === "right" ? 1 : -1;
@@ -265,3 +288,18 @@ document.addEventListener("keydown", function (event) {
 });
 gameLoop();
 //when moving left and right it doesn't check fo obsticles
+
+
+
+function gameOver() {
+  gameOverFlag = true;
+  clearInterval(intervalId);
+
+  ctx.fillStyle = "rgba(0, 0, 0, 0.7)";
+  ctx.fillRect(0, canvas.height / 3, canvas.width, 80);
+
+  ctx.fillStyle = "#fff";
+  ctx.font = "30px Arial";
+  ctx.textAlign = "center";
+  ctx.fillText("GAME OVER", canvas.width / 2, canvas.height / 2);
+}
