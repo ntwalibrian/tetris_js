@@ -13,12 +13,18 @@ const ctx = canvas.getContext("2d");
 const canvaPreview = document.getElementById("preview");
 const cty = canvaPreview.getContext("2d");
 
+const canvaLines = document.getElementById("lineCount");
+const ctz = canvaLines.getContext("2d");
+
 // Set the canvas size to match the board
 canvas.width = COLS * BLOCK_SIZE;
 canvas.height = ROWS * BLOCK_SIZE;
 
 canvaPreview.width = 4 * BLOCK_SIZE;
 canvaPreview.height = 4 * BLOCK_SIZE;
+
+canvaLines.width = 6 * BLOCK_SIZE;
+canvaLines.height = 3 * BLOCK_SIZE;
 
 function drawBoard() {
   // Clear canvas
@@ -69,6 +75,7 @@ function drawPiece(current, offsetX, offsetY) {
 
 let preview = randomPiece();
 let currentPiece = randomPiece();
+let lineCount = 0;
 let posX = 3;
 let posY = 0;
 // drawPiece(currentPiece, posX, posY);
@@ -95,6 +102,13 @@ function previewBoard() {
   }
 }
 
+function countBoard() {
+  ctz.fillStyle = "#f5f3f3ff";
+  ctz.fillRect(0, 0, canvaLines.width, canvaLines.height);
+  ctz.font = "20px Arial";
+  ctz.strokeText(`Lines: ${lineCount}`, 30, 45);
+}
+
 function update() {
   // Check if the next move down causes a collision
   if (!collision(currentPiece, posX, posY)) {
@@ -103,18 +117,20 @@ function update() {
     // Merge piece into board and spawn new one
     mergePiece(currentPiece, posX, posY);
     clearFullLines();
+    // console.log(lineCount)
     currentPiece = preview;
     preview = randomPiece();
     posX = 3;
     posY = 0;
   }
   drawBoard();
-  previewBoard()
+  previewBoard();
   drawPiece(currentPiece, posX, posY);
 }
 
 function gameLoop() {
   drawBoard();
+  countBoard();
   previewBoard();
   drawPiece(currentPiece, posX, posY);
   setInterval(() => {
@@ -133,6 +149,8 @@ function clearFullLines() {
       board.unshift(Array(COLS).fill(0));
       // Move the index back to recheck this row (because all rows shifted down)
       y++;
+      lineCount++;
+      countBoard();
     }
   }
 }
