@@ -198,7 +198,6 @@ function checkLoss(piece, offsetX, offsetY) {
   return false;
 }
 
-
 function collisionX(piece, offsetX, offsetY, dir) {
   const dx = dir === "right" ? 1 : -1;
   for (let y = 0; y < piece.length; y++) {
@@ -284,22 +283,58 @@ document.addEventListener("keydown", function (event) {
         drawPiece(currentPiece, posX, posY);
       }
       break;
+    case "Enter":
+      if (gameOverFlag) {
+        restartGame();
+      }
+      break;
+    
   }
 });
 gameLoop();
 //when moving left and right it doesn't check fo obsticles
-
-
 
 function gameOver() {
   gameOverFlag = true;
   clearInterval(intervalId);
 
   ctx.fillStyle = "rgba(0, 0, 0, 0.7)";
-  ctx.fillRect(0, canvas.height / 3, canvas.width, 80);
+  ctx.fillRect(0, canvas.height / 3, canvas.width, 120);
 
   ctx.fillStyle = "#fff";
   ctx.font = "30px Arial";
   ctx.textAlign = "center";
-  ctx.fillText("GAME OVER", canvas.width / 2, canvas.height / 2);
+  ctx.fillText("GAME OVER", canvas.width / 2, canvas.height / 2 - 20);
+
+  ctx.font = "18px Arial";
+  ctx.fillText(
+    "Press ENTER to restart",
+    canvas.width / 2,
+    canvas.height / 2 + 20
+  );
+}
+
+function restartGame() {
+  // Clear the board
+  for (let y = 0; y < ROWS; y++) {
+    for (let x = 0; x < COLS; x++) {
+      board[y][x] = 0;
+    }
+  }
+
+  // Reset game variables
+  gameOverFlag = false;
+  lineCount = 0;
+  posX = 3;
+  posY = 0;
+  preview = randomPiece();
+  currentPiece = randomPiece();
+
+  // Clear any existing interval
+  if (intervalId) {
+    clearInterval(intervalId);
+  }
+
+  // Start the game loop again
+  gameLoop();
 }
