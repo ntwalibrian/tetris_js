@@ -26,6 +26,13 @@ Use the following keys to control the Tetris pieces:
 ## Project Structure
 
 
+## Demo
+
+Play the game online: [Tetris Web Demo](https://tetris-js-delta.vercel.app/)  
+
+Or open the `index.html` file locally in any modern browser.
+
+
 ## How to Run
 
 1. Clone or download the repository.  
