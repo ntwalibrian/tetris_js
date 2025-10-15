@@ -2,9 +2,6 @@
 
 A classic **Tetris** game built using **HTML5 Canvas** and **JavaScript**. Run directly in your browser via `index.html`.  
 
-## Demo
-
-Open the `index.html` file in any modern browser to play the game. No additional setup is required.
 
 ## How to Play
 
