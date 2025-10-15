@@ -288,7 +288,11 @@ document.addEventListener("keydown", function (event) {
         restartGame();
       }
       break;
-    
+    case " ":
+      if (!gameOverFlag) {
+        hardDrop();
+      }
+      break;
   }
 });
 gameLoop();
@@ -299,7 +303,7 @@ function gameOver() {
   clearInterval(intervalId);
 
   ctx.fillStyle = "rgba(0, 0, 0, 0.7)";
-  ctx.fillRect(0, canvas.height / 3, canvas.width, 120);
+  ctx.fillRect(0, canvas.height / 3, canvas.width, 150);
 
   ctx.fillStyle = "#fff";
   ctx.font = "30px Arial";
@@ -337,4 +341,28 @@ function restartGame() {
 
   // Start the game loop again
   gameLoop();
+}
+
+function hardDrop() {
+  while (!collision(currentPiece, posX, posY)) {
+    posY++;
+  }
+  // posY--; // step back to last valid position
+
+  mergePiece(currentPiece, posX, posY);
+  clearFullLines();
+
+  currentPiece = preview;
+  preview = randomPiece();
+  posX = 3;
+  posY = 0;
+
+  if (checkLoss(currentPiece, posX, posY)) {
+    gameOver();
+    return;
+  }
+
+  drawBoard();
+  previewBoard();
+  drawPiece(currentPiece, posX, posY);
 }
